@@ -12,5 +12,4 @@ From the maven installation we see that the java openjdk version is:
 
 
 
-prueba desde worker-node
 
