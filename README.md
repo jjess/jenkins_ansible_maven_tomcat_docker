@@ -24,6 +24,12 @@ mvn archetype:generate -DgroupId=com.mycompany.app \
     -DarchetypeVersion=1.4 -DinteractiveMode=false
 ```
 
+Test the compilation:
+
+```
+cd my-app
+mvn package
+```
 
 
 
