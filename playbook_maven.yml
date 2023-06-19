@@ -1,0 +1,43 @@
+- hosts: maven
+  become: true
+  tasks:
+    - name: ensure maven is installed
+      apt:
+        name: maven
+        state: present
+        update_cache: yes
+    - name: ensure docker is installed
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+    - name: start docker service
+      service: name=docker state=started
+    - name: get webapp code
+      git: repo=https://github.com/jjess/tomcat_webapp_demo dest=/tmp/tomcat_webapp_demo
+    - name: clean from previous executions
+      command: chdir=/tmp/tomcat_webapp_demo mvn clean install  
+    - name: build webapp
+      command: chdir=/tmp/tomcat_webapp_demo mvn package
+    - name: test if successful war file
+      stat:
+        path: /tmp/tomcat_webapp_demo/target/tomcat_webapp_demo.war
+      register: register_name
+    - name: message is success
+      debug:
+        msg: "webapp war file found!"
+      when: register_name.stat.exists
+    - name: message is fail
+      debug:
+        msg: "webapp war not file found!"
+      when: not register_name.stat.exists
+    - name: build the dockerfile into an Image
+      command: chdir=/tmp/tomcat_webapp_demo docker build -t tomcat_webapp_demo:ansible .
+    - name: stop current container
+      command: docker stop tomcat_webapp_demo
+      ignore_errors: True
+    - name: delete the previous container
+      command: docker rm tomcat_webapp_demo
+      ignore_errors: True
+    - name: run the image
+      command: docker run -d -P -p 9080:8080 --name tomcat_webapp_demo tomcat_webapp_demo:ansible
