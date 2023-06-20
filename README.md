@@ -10,9 +10,6 @@ sudo apt install maven
 
 Jenkins already installed in master-node.
 Install ansible plugin.
-Manage Jenkins/Tools/Ansible installations:
-
-	name: ansible
-	path: /usr/bin
-
+Do not configure Ansible in Jenkins, as we will use 
+a Jenkins Node with Ansible.
 
