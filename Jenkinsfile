@@ -16,7 +16,8 @@ pipeline{
 					disableHostKeyChecking: true, 
 					installation: 'ansible', 
 					inventory: 'inventory', 
-					playbook: 'playbook_maven.yml'
+					playbook: 'playbook_maven.yml' 
+					)
             }
         }
         
